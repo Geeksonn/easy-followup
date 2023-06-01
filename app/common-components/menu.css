@@ -1,0 +1,31 @@
+.menu {
+    @apply flex flex-col space-y-3 w-1/5;
+    @apply bg-gray-900 text-gray-400 px-4 py-4;
+}
+
+.menuContent {
+    @apply flex flex-col justify-between h-full;
+}
+
+.appTitle {
+    @apply font-bold text-2xl text-center mb-8 text-teal-400;
+}
+
+.menuItem,
+.userMenu {
+    @apply px-3 py-2 cursor-pointer;
+    @apply hover:bg-gray-700 hover:rounded-lg hover:text-teal-400;
+}
+
+.menuItem {
+    @apply my-1;
+}
+
+.userMenu {
+    @apply font-semibold /*fixed bottom-4*/;
+}
+
+.menuItem.active,
+.userMenu.active {
+    @apply bg-gray-700 rounded-lg text-teal-400;
+}
