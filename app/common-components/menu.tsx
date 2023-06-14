@@ -2,52 +2,82 @@
 import React from 'react';
 
 import './menu.css';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 //const MenuWithSub: React.FunctionComponent = () => {};
 
 type MenuItemProps = {
-    selected: boolean;
     text: string;
-    onClick: () => void;
+    path: string;
+    useSub?: boolean;
 };
 
-const MenuItem: React.FunctionComponent<MenuItemProps> = ({ selected, text, onClick }) => {
-    let className = selected ? 'menuItem active' : 'menuItem';
+type SubMenuItemProps = MenuItemProps & {
+    children: MenuItemProps[];
+};
+
+const MenuItemWithSub: React.FunctionComponent<SubMenuItemProps> = (props) => {
+    const { text, path, children } = props;
+    const pathname = usePathname();
 
     return (
-        <li className={className} onClick={() => onClick()}>
-            {text}
-        </li>
+        <div className='menuItem active'>
+            <Link href={path}>
+                <li>{text}</li>
+            </Link>
+            <ul className='mt-2'>
+                {children.map((c, i) => (
+                    <Link key={`link_${i}`} href={`${path}${c.path}`}>
+                        <li key={`li_${i}`} className={`subMenuItem ${pathname === path + c.path ? 'active' : ''}`}>
+                            {c.text}
+                        </li>
+                    </Link>
+                ))}
+            </ul>
+        </div>
     );
 };
 
-const Menu: React.FunctionComponent = () => {
-    const [selected, setSelected] = React.useState<string>('Home');
+const MenuItem: React.FunctionComponent<MenuItemProps> = ({ text, path, useSub = false }) => {
+    const pathname = usePathname();
+    let className = path === pathname ? 'menuItem active' : 'menuItem';
 
+    //TODO
+    const boards = [
+        { text: 'Electricity', path: '/a1245' },
+        { text: 'Electricity', path: '/drerdf' },
+        { text: 'Electricity', path: '/trtrgr' },
+        { text: 'Electricity', path: '/fgfgfg' },
+    ];
+
+    if (useSub && pathname.includes(path)) {
+        return <MenuItemWithSub text={text} path={path} children={boards} />;
+    } else {
+        return (
+            <Link href={path}>
+                <li className={className}>{text}</li>
+            </Link>
+        );
+    }
+};
+
+const Menu: React.FunctionComponent = () => {
     return (
         <div className='menu'>
             <div className='appTitle'>Easy Follow-up</div>
             <div className='menuContent'>
                 <div>
                     <ul>
-                        <MenuItem
-                            text='Home'
-                            selected={selected === 'Home'}
-                            onClick={() => setSelected('Home')}
-                        />
-                        <MenuItem
-                            text='Dashboards'
-                            selected={selected === 'Dashboards'}
-                            onClick={() => setSelected('Dashboards')}
-                        />
-                        <MenuItem
-                            text='Settings'
-                            selected={selected === 'Settings'}
-                            onClick={() => setSelected('Settings')}
-                        />
+                        <MenuItem text='Home' path='/' />
+                        <MenuItem text='Dashboards' path='/dashboards' useSub />
+                        <MenuItem text='Settings' path='/settings' />
                     </ul>
                 </div>
-                <div className='userMenu'>Geekson</div>
+
+                <ul>
+                    <MenuItem text='Geekson' path='/user/profile' />
+                </ul>
             </div>
         </div>
     );

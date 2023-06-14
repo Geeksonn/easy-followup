@@ -4,11 +4,11 @@ import Component from '@/common-components/component';
 
 const UserProfile: React.FunctionComponent = () => {
     return (
-        <div className='flex flex-col'>
+        <main>
             <p>This is the UserProfile page</p>
             <p>Is this working ?</p>
             <Component />
-        </div>
+        </main>
     );
 };
 
